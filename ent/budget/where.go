@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/galamdring/go-gold/ent/predicate"
+	"github.com/galamdring/go-gold/ent/schema"
 )
 
 // ID filters vertices based on their ID field.
@@ -59,7 +60,7 @@ func Name(v string) predicate.Budget {
 }
 
 // Amount applies equality check predicate on the "amount" field. It's identical to AmountEQ.
-func Amount(v float64) predicate.Budget {
+func Amount(v schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldEQ(FieldAmount, v))
 }
 
@@ -129,42 +130,42 @@ func NameContainsFold(v string) predicate.Budget {
 }
 
 // AmountEQ applies the EQ predicate on the "amount" field.
-func AmountEQ(v float64) predicate.Budget {
+func AmountEQ(v schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldEQ(FieldAmount, v))
 }
 
 // AmountNEQ applies the NEQ predicate on the "amount" field.
-func AmountNEQ(v float64) predicate.Budget {
+func AmountNEQ(v schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldNEQ(FieldAmount, v))
 }
 
 // AmountIn applies the In predicate on the "amount" field.
-func AmountIn(vs ...float64) predicate.Budget {
+func AmountIn(vs ...schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldIn(FieldAmount, vs...))
 }
 
 // AmountNotIn applies the NotIn predicate on the "amount" field.
-func AmountNotIn(vs ...float64) predicate.Budget {
+func AmountNotIn(vs ...schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldNotIn(FieldAmount, vs...))
 }
 
 // AmountGT applies the GT predicate on the "amount" field.
-func AmountGT(v float64) predicate.Budget {
+func AmountGT(v schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldGT(FieldAmount, v))
 }
 
 // AmountGTE applies the GTE predicate on the "amount" field.
-func AmountGTE(v float64) predicate.Budget {
+func AmountGTE(v schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldGTE(FieldAmount, v))
 }
 
 // AmountLT applies the LT predicate on the "amount" field.
-func AmountLT(v float64) predicate.Budget {
+func AmountLT(v schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldLT(FieldAmount, v))
 }
 
 // AmountLTE applies the LTE predicate on the "amount" field.
-func AmountLTE(v float64) predicate.Budget {
+func AmountLTE(v schema.Decimal) predicate.Budget {
 	return predicate.Budget(sql.FieldLTE(FieldAmount, v))
 }
 

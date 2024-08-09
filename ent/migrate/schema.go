@@ -35,7 +35,7 @@ var (
 	BudgetsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
-		{Name: "amount", Type: field.TypeFloat64},
+		{Name: "amount", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "numeric", "sqlite3": "TEXT"}},
 		{Name: "user_budgets", Type: field.TypeInt, Nullable: true},
 	}
 	// BudgetsTable holds the schema information for the "budgets" table.

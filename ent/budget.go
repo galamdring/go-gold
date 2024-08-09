@@ -9,6 +9,7 @@ import (
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
 	"github.com/galamdring/go-gold/ent/budget"
+	"github.com/galamdring/go-gold/ent/schema"
 	"github.com/galamdring/go-gold/ent/user"
 )
 
@@ -20,7 +21,7 @@ type Budget struct {
 	// Name holds the value of the "name" field.
 	Name string `json:"name,omitempty"`
 	// Amount holds the value of the "amount" field.
-	Amount float64 `json:"amount,omitempty"`
+	Amount schema.Decimal `json:"amount,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the BudgetQuery when eager-loading is set.
 	Edges        BudgetEdges `json:"edges"`
@@ -76,7 +77,7 @@ func (*Budget) scanValues(columns []string) ([]any, error) {
 	for i := range columns {
 		switch columns[i] {
 		case budget.FieldAmount:
-			values[i] = new(sql.NullFloat64)
+			values[i] = new(schema.Decimal)
 		case budget.FieldID:
 			values[i] = new(sql.NullInt64)
 		case budget.FieldName:
@@ -111,10 +112,10 @@ func (b *Budget) assignValues(columns []string, values []any) error {
 				b.Name = value.String
 			}
 		case budget.FieldAmount:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
+			if value, ok := values[i].(*schema.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field amount", values[i])
-			} else if value.Valid {
-				b.Amount = value.Float64
+			} else if value != nil {
+				b.Amount = *value
 			}
 		case budget.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {

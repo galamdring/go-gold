@@ -1,0 +1,36 @@
+### Create a user
+# @name CreateUser
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "username": "john_doe",
+    "email": "john@example.com"
+}
+
+### Get All Users
+# @name GetAllUsers
+GET http://localhost:8080/users
+
+### Capture the ID of the first user
+@userId = {{GetAllUsers.response.body.users[0].id}}
+
+### Get a user by Id
+# @name GetUserById
+GET http://localhost:8080/users/{{userId}}
+# Request URL: http://localhost:8080/users/{{firstUserId}}
+
+
+### Update a user by ID
+# @name UpdateUser
+PUT http://localhost:8080/users/{{userId}}
+Content-Type: application/json
+
+{
+    "username": "john_doe_updated",
+    "email": "john_updated@example.com"
+}
+
+### Delete a user by ID
+# @name DeleteUser
+DELETE http://localhost:8080/users/{{userId}}

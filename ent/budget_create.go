@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/galamdring/go-gold/ent/account"
 	"github.com/galamdring/go-gold/ent/budget"
+	"github.com/galamdring/go-gold/ent/schema"
 	"github.com/galamdring/go-gold/ent/transaction"
 	"github.com/galamdring/go-gold/ent/user"
 )
@@ -29,8 +30,8 @@ func (bc *BudgetCreate) SetName(s string) *BudgetCreate {
 }
 
 // SetAmount sets the "amount" field.
-func (bc *BudgetCreate) SetAmount(f float64) *BudgetCreate {
-	bc.mutation.SetAmount(f)
+func (bc *BudgetCreate) SetAmount(s schema.Decimal) *BudgetCreate {
+	bc.mutation.SetAmount(s)
 	return bc
 }
 
@@ -166,7 +167,7 @@ func (bc *BudgetCreate) createSpec() (*Budget, *sqlgraph.CreateSpec) {
 		_node.Name = value
 	}
 	if value, ok := bc.mutation.Amount(); ok {
-		_spec.SetField(budget.FieldAmount, field.TypeFloat64, value)
+		_spec.SetField(budget.FieldAmount, field.TypeOther, value)
 		_node.Amount = value
 	}
 	if nodes := bc.mutation.UserIDs(); len(nodes) > 0 {

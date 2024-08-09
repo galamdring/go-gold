@@ -13,6 +13,7 @@ import (
 	"github.com/galamdring/go-gold/ent/account"
 	"github.com/galamdring/go-gold/ent/budget"
 	"github.com/galamdring/go-gold/ent/predicate"
+	"github.com/galamdring/go-gold/ent/schema"
 	"github.com/galamdring/go-gold/ent/transaction"
 	"github.com/galamdring/go-gold/ent/user"
 )
@@ -45,23 +46,16 @@ func (bu *BudgetUpdate) SetNillableName(s *string) *BudgetUpdate {
 }
 
 // SetAmount sets the "amount" field.
-func (bu *BudgetUpdate) SetAmount(f float64) *BudgetUpdate {
-	bu.mutation.ResetAmount()
-	bu.mutation.SetAmount(f)
+func (bu *BudgetUpdate) SetAmount(s schema.Decimal) *BudgetUpdate {
+	bu.mutation.SetAmount(s)
 	return bu
 }
 
 // SetNillableAmount sets the "amount" field if the given value is not nil.
-func (bu *BudgetUpdate) SetNillableAmount(f *float64) *BudgetUpdate {
-	if f != nil {
-		bu.SetAmount(*f)
+func (bu *BudgetUpdate) SetNillableAmount(s *schema.Decimal) *BudgetUpdate {
+	if s != nil {
+		bu.SetAmount(*s)
 	}
-	return bu
-}
-
-// AddAmount adds f to the "amount" field.
-func (bu *BudgetUpdate) AddAmount(f float64) *BudgetUpdate {
-	bu.mutation.AddAmount(f)
 	return bu
 }
 
@@ -207,10 +201,7 @@ func (bu *BudgetUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		_spec.SetField(budget.FieldName, field.TypeString, value)
 	}
 	if value, ok := bu.mutation.Amount(); ok {
-		_spec.SetField(budget.FieldAmount, field.TypeFloat64, value)
-	}
-	if value, ok := bu.mutation.AddedAmount(); ok {
-		_spec.AddField(budget.FieldAmount, field.TypeFloat64, value)
+		_spec.SetField(budget.FieldAmount, field.TypeOther, value)
 	}
 	if bu.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -366,23 +357,16 @@ func (buo *BudgetUpdateOne) SetNillableName(s *string) *BudgetUpdateOne {
 }
 
 // SetAmount sets the "amount" field.
-func (buo *BudgetUpdateOne) SetAmount(f float64) *BudgetUpdateOne {
-	buo.mutation.ResetAmount()
-	buo.mutation.SetAmount(f)
+func (buo *BudgetUpdateOne) SetAmount(s schema.Decimal) *BudgetUpdateOne {
+	buo.mutation.SetAmount(s)
 	return buo
 }
 
 // SetNillableAmount sets the "amount" field if the given value is not nil.
-func (buo *BudgetUpdateOne) SetNillableAmount(f *float64) *BudgetUpdateOne {
-	if f != nil {
-		buo.SetAmount(*f)
+func (buo *BudgetUpdateOne) SetNillableAmount(s *schema.Decimal) *BudgetUpdateOne {
+	if s != nil {
+		buo.SetAmount(*s)
 	}
-	return buo
-}
-
-// AddAmount adds f to the "amount" field.
-func (buo *BudgetUpdateOne) AddAmount(f float64) *BudgetUpdateOne {
-	buo.mutation.AddAmount(f)
 	return buo
 }
 
@@ -558,10 +542,7 @@ func (buo *BudgetUpdateOne) sqlSave(ctx context.Context) (_node *Budget, err err
 		_spec.SetField(budget.FieldName, field.TypeString, value)
 	}
 	if value, ok := buo.mutation.Amount(); ok {
-		_spec.SetField(budget.FieldAmount, field.TypeFloat64, value)
-	}
-	if value, ok := buo.mutation.AddedAmount(); ok {
-		_spec.AddField(budget.FieldAmount, field.TypeFloat64, value)
+		_spec.SetField(budget.FieldAmount, field.TypeOther, value)
 	}
 	if buo.mutation.UserCleared() {
 		edge := &sqlgraph.EdgeSpec{

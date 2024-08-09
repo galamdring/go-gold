@@ -1,0 +1,44 @@
+### Create a user
+# @name CreateUser
+POST http://localhost:8080/users
+Content-Type: application/json
+
+{
+    "username": "john_doe",
+    "email": "john@example.com"
+}
+
+@userId = {{CreateUser.response.body.id}}
+
+### Create a new budget
+# @name CreateBudget
+POST http://localhost:8080/budgets
+Content-Type: application/json
+
+{
+    "name": "Monthly Budget",
+    "amount": 500.00,
+    "user":{"id": {{userId}}}
+}
+
+@budgetId = {{CreateBudget.response.body.id}}
+
+### Get all budgets
+# @name GetAllBudgetsForUser
+GET http://localhost:8080/budgets?userId={{userId}}
+
+### Get a specific budget by ID
+GET http://localhost:8080/budgets/{{budgetId}}
+
+### Update a budget
+PUT http://localhost:8080/budgets/{{budgetId}}
+Content-Type: application/json
+
+{
+    "name": "Updated Budget",
+    "amount": 600.00,
+    "user":{"id": {{userId}}}
+}
+
+### Delete a budget
+DELETE http://localhost:8080/budgets/{{budgetId}}

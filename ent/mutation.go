@@ -14,6 +14,7 @@ import (
 	"github.com/galamdring/go-gold/ent/budget"
 	"github.com/galamdring/go-gold/ent/category"
 	"github.com/galamdring/go-gold/ent/predicate"
+	"github.com/galamdring/go-gold/ent/schema"
 	"github.com/galamdring/go-gold/ent/transaction"
 	"github.com/galamdring/go-gold/ent/user"
 )
@@ -756,8 +757,7 @@ type BudgetMutation struct {
 	typ                 string
 	id                  *int
 	name                *string
-	amount              *float64
-	addamount           *float64
+	amount              *schema.Decimal
 	clearedFields       map[string]struct{}
 	user                *int
 	cleareduser         bool
@@ -913,13 +913,12 @@ func (m *BudgetMutation) ResetName() {
 }
 
 // SetAmount sets the "amount" field.
-func (m *BudgetMutation) SetAmount(f float64) {
-	m.amount = &f
-	m.addamount = nil
+func (m *BudgetMutation) SetAmount(s schema.Decimal) {
+	m.amount = &s
 }
 
 // Amount returns the value of the "amount" field in the mutation.
-func (m *BudgetMutation) Amount() (r float64, exists bool) {
+func (m *BudgetMutation) Amount() (r schema.Decimal, exists bool) {
 	v := m.amount
 	if v == nil {
 		return
@@ -930,7 +929,7 @@ func (m *BudgetMutation) Amount() (r float64, exists bool) {
 // OldAmount returns the old "amount" field's value of the Budget entity.
 // If the Budget object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *BudgetMutation) OldAmount(ctx context.Context) (v float64, err error) {
+func (m *BudgetMutation) OldAmount(ctx context.Context) (v schema.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAmount is only allowed on UpdateOne operations")
 	}
@@ -944,28 +943,9 @@ func (m *BudgetMutation) OldAmount(ctx context.Context) (v float64, err error) {
 	return oldValue.Amount, nil
 }
 
-// AddAmount adds f to the "amount" field.
-func (m *BudgetMutation) AddAmount(f float64) {
-	if m.addamount != nil {
-		*m.addamount += f
-	} else {
-		m.addamount = &f
-	}
-}
-
-// AddedAmount returns the value that was added to the "amount" field in this mutation.
-func (m *BudgetMutation) AddedAmount() (r float64, exists bool) {
-	v := m.addamount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ResetAmount resets all changes to the "amount" field.
 func (m *BudgetMutation) ResetAmount() {
 	m.amount = nil
-	m.addamount = nil
 }
 
 // SetUserID sets the "user" edge to the User entity by id.
@@ -1198,7 +1178,7 @@ func (m *BudgetMutation) SetField(name string, value ent.Value) error {
 		m.SetName(v)
 		return nil
 	case budget.FieldAmount:
-		v, ok := value.(float64)
+		v, ok := value.(schema.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -1211,21 +1191,13 @@ func (m *BudgetMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *BudgetMutation) AddedFields() []string {
-	var fields []string
-	if m.addamount != nil {
-		fields = append(fields, budget.FieldAmount)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *BudgetMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case budget.FieldAmount:
-		return m.AddedAmount()
-	}
 	return nil, false
 }
 
@@ -1234,13 +1206,6 @@ func (m *BudgetMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *BudgetMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case budget.FieldAmount:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAmount(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Budget numeric field %s", name)
 }
