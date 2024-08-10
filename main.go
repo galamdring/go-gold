@@ -42,18 +42,20 @@ func main() {
 	budgetModel := models.NewBudgetModel(client)
 
 	// CRUD routes for User
-	router.POST(UsersEndpoint, userModel.CreateUser)      // Create
-	router.GET(UsersEndpoint, userModel.GetAllUsers)      // Read All
-	router.GET(UserByIdEndpoint, userModel.GetUser)       // Read
-	router.PUT(UserByIdEndpoint, userModel.UpdateUser)    // Update
-	router.DELETE(UserByIdEndpoint, userModel.DeleteUser) // Delete
+	usersGroup := router.Group(UsersEndpoint)
+	usersGroup.POST("", userModel.CreateUser)      // Create
+	usersGroup.GET("", userModel.GetAllUsers)      // Read All
+	usersGroup.GET("/:id", userModel.GetUser)       // Read
+	usersGroup.PUT("/:id", userModel.UpdateUser)    // Update
+	usersGroup.DELETE("/:id", userModel.DeleteUser) // Delete
 
 	// CRUD routes for budget
-	router.POST(BudgetsEndpoint, budgetModel.CreateBudget)      // Create
-	router.GET(BudgetsEndpoint, budgetModel.GetAllBudgets)      // Read All
-	router.GET(BudgetByIdEndpoint, budgetModel.GetBudget)       // Read
-	router.PUT(BudgetByIdEndpoint, budgetModel.UpdateBudget)    // Update
-	router.DELETE(BudgetByIdEndpoint, budgetModel.DeleteBudget) // Delete
+	budgetsGroup := usersGroup.Group("/:userId/budgets")
+	budgetsGroup.POST("", budgetModel.CreateBudget)      // Create
+	budgetsGroup.GET("", budgetModel.GetAllBudgets)      // Read All
+	budgetsGroup.GET("/:id", budgetModel.GetBudget)       // Read
+	budgetsGroup.PUT("/:id", budgetModel.UpdateBudget)    // Update
+	budgetsGroup.DELETE("/:id", budgetModel.DeleteBudget) // Delete
 
 	router.Logger.Fatal(router.Start(":8080"))
 

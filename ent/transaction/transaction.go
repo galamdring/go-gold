@@ -16,6 +16,8 @@ const (
 	FieldAmount = "amount"
 	// FieldNote holds the string denoting the note field in the database.
 	FieldNote = "note"
+	// FieldCleared holds the string denoting the cleared field in the database.
+	FieldCleared = "cleared"
 	// EdgeAccount holds the string denoting the account edge name in mutations.
 	EdgeAccount = "account"
 	// EdgeBudget holds the string denoting the budget edge name in mutations.
@@ -43,6 +45,7 @@ var Columns = []string{
 	FieldID,
 	FieldAmount,
 	FieldNote,
+	FieldCleared,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "transactions"
@@ -83,6 +86,11 @@ func ByAmount(opts ...sql.OrderTermOption) OrderOption {
 // ByNote orders the results by the note field.
 func ByNote(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldNote, opts...).ToFunc()
+}
+
+// ByCleared orders the results by the cleared field.
+func ByCleared(opts ...sql.OrderTermOption) OrderOption {
+	return sql.OrderByField(FieldCleared, opts...).ToFunc()
 }
 
 // ByAccountField orders the results by account field.

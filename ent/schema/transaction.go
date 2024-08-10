@@ -15,8 +15,13 @@ type Transaction struct {
 func (Transaction) Fields() []ent.Field {
 	return []ent.Field{
 		field.Int("id").Unique(),
-		field.Float("amount"),
+		field.Other("amount", Decimal{}).SchemaType(map[string]string{
+			"postgres": "numeric", // Specify the database type for PostgreSQL
+			"sqlite3":   "TEXT",    // Specify the database type for SQLite
+			// Add other database types as needed
+		}),
 		field.String("note"),
+		field.Bool("cleared"),
 	}
 }
 

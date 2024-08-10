@@ -6,6 +6,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"github.com/galamdring/go-gold/ent/predicate"
+	"github.com/galamdring/go-gold/ent/schema"
 )
 
 // ID filters vertices based on their ID field.
@@ -54,7 +55,7 @@ func IDLTE(id int) predicate.Transaction {
 }
 
 // Amount applies equality check predicate on the "amount" field. It's identical to AmountEQ.
-func Amount(v float64) predicate.Transaction {
+func Amount(v schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldEQ(FieldAmount, v))
 }
 
@@ -63,43 +64,48 @@ func Note(v string) predicate.Transaction {
 	return predicate.Transaction(sql.FieldEQ(FieldNote, v))
 }
 
+// Cleared applies equality check predicate on the "cleared" field. It's identical to ClearedEQ.
+func Cleared(v bool) predicate.Transaction {
+	return predicate.Transaction(sql.FieldEQ(FieldCleared, v))
+}
+
 // AmountEQ applies the EQ predicate on the "amount" field.
-func AmountEQ(v float64) predicate.Transaction {
+func AmountEQ(v schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldEQ(FieldAmount, v))
 }
 
 // AmountNEQ applies the NEQ predicate on the "amount" field.
-func AmountNEQ(v float64) predicate.Transaction {
+func AmountNEQ(v schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldNEQ(FieldAmount, v))
 }
 
 // AmountIn applies the In predicate on the "amount" field.
-func AmountIn(vs ...float64) predicate.Transaction {
+func AmountIn(vs ...schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldIn(FieldAmount, vs...))
 }
 
 // AmountNotIn applies the NotIn predicate on the "amount" field.
-func AmountNotIn(vs ...float64) predicate.Transaction {
+func AmountNotIn(vs ...schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldNotIn(FieldAmount, vs...))
 }
 
 // AmountGT applies the GT predicate on the "amount" field.
-func AmountGT(v float64) predicate.Transaction {
+func AmountGT(v schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldGT(FieldAmount, v))
 }
 
 // AmountGTE applies the GTE predicate on the "amount" field.
-func AmountGTE(v float64) predicate.Transaction {
+func AmountGTE(v schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldGTE(FieldAmount, v))
 }
 
 // AmountLT applies the LT predicate on the "amount" field.
-func AmountLT(v float64) predicate.Transaction {
+func AmountLT(v schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldLT(FieldAmount, v))
 }
 
 // AmountLTE applies the LTE predicate on the "amount" field.
-func AmountLTE(v float64) predicate.Transaction {
+func AmountLTE(v schema.Decimal) predicate.Transaction {
 	return predicate.Transaction(sql.FieldLTE(FieldAmount, v))
 }
 
@@ -166,6 +172,16 @@ func NoteEqualFold(v string) predicate.Transaction {
 // NoteContainsFold applies the ContainsFold predicate on the "note" field.
 func NoteContainsFold(v string) predicate.Transaction {
 	return predicate.Transaction(sql.FieldContainsFold(FieldNote, v))
+}
+
+// ClearedEQ applies the EQ predicate on the "cleared" field.
+func ClearedEQ(v bool) predicate.Transaction {
+	return predicate.Transaction(sql.FieldEQ(FieldCleared, v))
+}
+
+// ClearedNEQ applies the NEQ predicate on the "cleared" field.
+func ClearedNEQ(v bool) predicate.Transaction {
+	return predicate.Transaction(sql.FieldNEQ(FieldCleared, v))
 }
 
 // HasAccount applies the HasEdge predicate on the "account" edge.

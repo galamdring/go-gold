@@ -13,8 +13,6 @@ var (
 		{Name: "id", Type: field.TypeInt, Increment: true},
 		{Name: "name", Type: field.TypeString},
 		{Name: "type", Type: field.TypeEnum, Enums: []string{"checking", "savings", "credit_card", "installment_loan"}},
-		{Name: "current_balance", Type: field.TypeFloat64},
-		{Name: "cleared_balance", Type: field.TypeFloat64},
 		{Name: "budget_accounts", Type: field.TypeInt, Nullable: true},
 	}
 	// AccountsTable holds the schema information for the "accounts" table.
@@ -25,7 +23,7 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "accounts_budgets_accounts",
-				Columns:    []*schema.Column{AccountsColumns[5]},
+				Columns:    []*schema.Column{AccountsColumns[3]},
 				RefColumns: []*schema.Column{BudgetsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
@@ -66,8 +64,9 @@ var (
 	// TransactionsColumns holds the columns for the "transactions" table.
 	TransactionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "amount", Type: field.TypeFloat64},
+		{Name: "amount", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "numeric", "sqlite3": "TEXT"}},
 		{Name: "note", Type: field.TypeString},
+		{Name: "cleared", Type: field.TypeBool},
 		{Name: "account_transactions", Type: field.TypeInt, Nullable: true},
 		{Name: "budget_transactions", Type: field.TypeInt, Nullable: true},
 	}
@@ -79,13 +78,13 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:     "transactions_accounts_transactions",
-				Columns:    []*schema.Column{TransactionsColumns[3]},
+				Columns:    []*schema.Column{TransactionsColumns[4]},
 				RefColumns: []*schema.Column{AccountsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:     "transactions_budgets_transactions",
-				Columns:    []*schema.Column{TransactionsColumns[4]},
+				Columns:    []*schema.Column{TransactionsColumns[5]},
 				RefColumns: []*schema.Column{BudgetsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},

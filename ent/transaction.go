@@ -10,6 +10,7 @@ import (
 	"entgo.io/ent/dialect/sql"
 	"github.com/galamdring/go-gold/ent/account"
 	"github.com/galamdring/go-gold/ent/budget"
+	"github.com/galamdring/go-gold/ent/schema"
 	"github.com/galamdring/go-gold/ent/transaction"
 )
 
@@ -19,9 +20,11 @@ type Transaction struct {
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
 	// Amount holds the value of the "amount" field.
-	Amount float64 `json:"amount,omitempty"`
+	Amount schema.Decimal `json:"amount,omitempty"`
 	// Note holds the value of the "note" field.
 	Note string `json:"note,omitempty"`
+	// Cleared holds the value of the "cleared" field.
+	Cleared bool `json:"cleared,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the TransactionQuery when eager-loading is set.
 	Edges                TransactionEdges `json:"edges"`
@@ -69,7 +72,9 @@ func (*Transaction) scanValues(columns []string) ([]any, error) {
 	for i := range columns {
 		switch columns[i] {
 		case transaction.FieldAmount:
-			values[i] = new(sql.NullFloat64)
+			values[i] = new(schema.Decimal)
+		case transaction.FieldCleared:
+			values[i] = new(sql.NullBool)
 		case transaction.FieldID:
 			values[i] = new(sql.NullInt64)
 		case transaction.FieldNote:
@@ -100,16 +105,22 @@ func (t *Transaction) assignValues(columns []string, values []any) error {
 			}
 			t.ID = int(value.Int64)
 		case transaction.FieldAmount:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
+			if value, ok := values[i].(*schema.Decimal); !ok {
 				return fmt.Errorf("unexpected type %T for field amount", values[i])
-			} else if value.Valid {
-				t.Amount = value.Float64
+			} else if value != nil {
+				t.Amount = *value
 			}
 		case transaction.FieldNote:
 			if value, ok := values[i].(*sql.NullString); !ok {
 				return fmt.Errorf("unexpected type %T for field note", values[i])
 			} else if value.Valid {
 				t.Note = value.String
+			}
+		case transaction.FieldCleared:
+			if value, ok := values[i].(*sql.NullBool); !ok {
+				return fmt.Errorf("unexpected type %T for field cleared", values[i])
+			} else if value.Valid {
+				t.Cleared = value.Bool
 			}
 		case transaction.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -176,6 +187,9 @@ func (t *Transaction) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("note=")
 	builder.WriteString(t.Note)
+	builder.WriteString(", ")
+	builder.WriteString("cleared=")
+	builder.WriteString(fmt.Sprintf("%v", t.Cleared))
 	builder.WriteByte(')')
 	return builder.String()
 }

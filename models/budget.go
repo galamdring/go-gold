@@ -30,7 +30,6 @@ func BuildBudgetRestModel(bud *ent.Budget) *BudgetRestModel {
 		userVal = BuildUserRestModel(bud.Edges.User)
 	}
 	return &BudgetRestModel{
-
 		ID: 	bud.ID,
 		Name:   bud.Name,
 		Amount: decimal.Decimal(bud.Amount),
@@ -64,8 +63,6 @@ func (m *BudgetModel) CreateBudget(eContext echo.Context) error {
 		return eContext.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	eContext.Logger().Infof("creating budget for user: %d", b.User.ID)
-
 	bud, err := m.client.Budget.Create().
 		SetUserID(b.User.ID).
 		SetName(b.Name).
@@ -86,7 +83,7 @@ func (m *BudgetModel) CreateBudget(eContext echo.Context) error {
 
 // GetAllBudgets retrieves all budgets.
 func (m *BudgetModel) GetAllBudgets(eContext echo.Context) error {
-	userIdStr := eContext.QueryParam("userId")
+	userIdStr := eContext.Param("userId")
 	userId, err := strconv.Atoi(userIdStr)
 	if err != nil {
 		return m.sendJSON(eContext, http.StatusBadRequest, "Invalid user ID")

@@ -57,48 +57,6 @@ func (au *AccountUpdate) SetNillableType(a *account.Type) *AccountUpdate {
 	return au
 }
 
-// SetCurrentBalance sets the "current_balance" field.
-func (au *AccountUpdate) SetCurrentBalance(f float64) *AccountUpdate {
-	au.mutation.ResetCurrentBalance()
-	au.mutation.SetCurrentBalance(f)
-	return au
-}
-
-// SetNillableCurrentBalance sets the "current_balance" field if the given value is not nil.
-func (au *AccountUpdate) SetNillableCurrentBalance(f *float64) *AccountUpdate {
-	if f != nil {
-		au.SetCurrentBalance(*f)
-	}
-	return au
-}
-
-// AddCurrentBalance adds f to the "current_balance" field.
-func (au *AccountUpdate) AddCurrentBalance(f float64) *AccountUpdate {
-	au.mutation.AddCurrentBalance(f)
-	return au
-}
-
-// SetClearedBalance sets the "cleared_balance" field.
-func (au *AccountUpdate) SetClearedBalance(f float64) *AccountUpdate {
-	au.mutation.ResetClearedBalance()
-	au.mutation.SetClearedBalance(f)
-	return au
-}
-
-// SetNillableClearedBalance sets the "cleared_balance" field if the given value is not nil.
-func (au *AccountUpdate) SetNillableClearedBalance(f *float64) *AccountUpdate {
-	if f != nil {
-		au.SetClearedBalance(*f)
-	}
-	return au
-}
-
-// AddClearedBalance adds f to the "cleared_balance" field.
-func (au *AccountUpdate) AddClearedBalance(f float64) *AccountUpdate {
-	au.mutation.AddClearedBalance(f)
-	return au
-}
-
 // SetBudgetID sets the "budget" edge to the Budget entity by ID.
 func (au *AccountUpdate) SetBudgetID(id int) *AccountUpdate {
 	au.mutation.SetBudgetID(id)
@@ -220,18 +178,6 @@ func (au *AccountUpdate) sqlSave(ctx context.Context) (n int, err error) {
 	if value, ok := au.mutation.GetType(); ok {
 		_spec.SetField(account.FieldType, field.TypeEnum, value)
 	}
-	if value, ok := au.mutation.CurrentBalance(); ok {
-		_spec.SetField(account.FieldCurrentBalance, field.TypeFloat64, value)
-	}
-	if value, ok := au.mutation.AddedCurrentBalance(); ok {
-		_spec.AddField(account.FieldCurrentBalance, field.TypeFloat64, value)
-	}
-	if value, ok := au.mutation.ClearedBalance(); ok {
-		_spec.SetField(account.FieldClearedBalance, field.TypeFloat64, value)
-	}
-	if value, ok := au.mutation.AddedClearedBalance(); ok {
-		_spec.AddField(account.FieldClearedBalance, field.TypeFloat64, value)
-	}
 	if au.mutation.BudgetCleared() {
 		edge := &sqlgraph.EdgeSpec{
 			Rel:     sqlgraph.M2O,
@@ -351,48 +297,6 @@ func (auo *AccountUpdateOne) SetNillableType(a *account.Type) *AccountUpdateOne 
 	if a != nil {
 		auo.SetType(*a)
 	}
-	return auo
-}
-
-// SetCurrentBalance sets the "current_balance" field.
-func (auo *AccountUpdateOne) SetCurrentBalance(f float64) *AccountUpdateOne {
-	auo.mutation.ResetCurrentBalance()
-	auo.mutation.SetCurrentBalance(f)
-	return auo
-}
-
-// SetNillableCurrentBalance sets the "current_balance" field if the given value is not nil.
-func (auo *AccountUpdateOne) SetNillableCurrentBalance(f *float64) *AccountUpdateOne {
-	if f != nil {
-		auo.SetCurrentBalance(*f)
-	}
-	return auo
-}
-
-// AddCurrentBalance adds f to the "current_balance" field.
-func (auo *AccountUpdateOne) AddCurrentBalance(f float64) *AccountUpdateOne {
-	auo.mutation.AddCurrentBalance(f)
-	return auo
-}
-
-// SetClearedBalance sets the "cleared_balance" field.
-func (auo *AccountUpdateOne) SetClearedBalance(f float64) *AccountUpdateOne {
-	auo.mutation.ResetClearedBalance()
-	auo.mutation.SetClearedBalance(f)
-	return auo
-}
-
-// SetNillableClearedBalance sets the "cleared_balance" field if the given value is not nil.
-func (auo *AccountUpdateOne) SetNillableClearedBalance(f *float64) *AccountUpdateOne {
-	if f != nil {
-		auo.SetClearedBalance(*f)
-	}
-	return auo
-}
-
-// AddClearedBalance adds f to the "cleared_balance" field.
-func (auo *AccountUpdateOne) AddClearedBalance(f float64) *AccountUpdateOne {
-	auo.mutation.AddClearedBalance(f)
 	return auo
 }
 
@@ -546,18 +450,6 @@ func (auo *AccountUpdateOne) sqlSave(ctx context.Context) (_node *Account, err e
 	}
 	if value, ok := auo.mutation.GetType(); ok {
 		_spec.SetField(account.FieldType, field.TypeEnum, value)
-	}
-	if value, ok := auo.mutation.CurrentBalance(); ok {
-		_spec.SetField(account.FieldCurrentBalance, field.TypeFloat64, value)
-	}
-	if value, ok := auo.mutation.AddedCurrentBalance(); ok {
-		_spec.AddField(account.FieldCurrentBalance, field.TypeFloat64, value)
-	}
-	if value, ok := auo.mutation.ClearedBalance(); ok {
-		_spec.SetField(account.FieldClearedBalance, field.TypeFloat64, value)
-	}
-	if value, ok := auo.mutation.AddedClearedBalance(); ok {
-		_spec.AddField(account.FieldClearedBalance, field.TypeFloat64, value)
 	}
 	if auo.mutation.BudgetCleared() {
 		edge := &sqlgraph.EdgeSpec{

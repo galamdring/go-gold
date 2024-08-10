@@ -21,10 +21,6 @@ type Account struct {
 	Name string `json:"name,omitempty"`
 	// Type holds the value of the "type" field.
 	Type account.Type `json:"type,omitempty"`
-	// CurrentBalance holds the value of the "current_balance" field.
-	CurrentBalance float64 `json:"current_balance,omitempty"`
-	// ClearedBalance holds the value of the "cleared_balance" field.
-	ClearedBalance float64 `json:"cleared_balance,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the AccountQuery when eager-loading is set.
 	Edges           AccountEdges `json:"edges"`
@@ -68,8 +64,6 @@ func (*Account) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case account.FieldCurrentBalance, account.FieldClearedBalance:
-			values[i] = new(sql.NullFloat64)
 		case account.FieldID:
 			values[i] = new(sql.NullInt64)
 		case account.FieldName, account.FieldType:
@@ -108,18 +102,6 @@ func (a *Account) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field type", values[i])
 			} else if value.Valid {
 				a.Type = account.Type(value.String)
-			}
-		case account.FieldCurrentBalance:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field current_balance", values[i])
-			} else if value.Valid {
-				a.CurrentBalance = value.Float64
-			}
-		case account.FieldClearedBalance:
-			if value, ok := values[i].(*sql.NullFloat64); !ok {
-				return fmt.Errorf("unexpected type %T for field cleared_balance", values[i])
-			} else if value.Valid {
-				a.ClearedBalance = value.Float64
 			}
 		case account.ForeignKeys[0]:
 			if value, ok := values[i].(*sql.NullInt64); !ok {
@@ -179,12 +161,6 @@ func (a *Account) String() string {
 	builder.WriteString(", ")
 	builder.WriteString("type=")
 	builder.WriteString(fmt.Sprintf("%v", a.Type))
-	builder.WriteString(", ")
-	builder.WriteString("current_balance=")
-	builder.WriteString(fmt.Sprintf("%v", a.CurrentBalance))
-	builder.WriteString(", ")
-	builder.WriteString("cleared_balance=")
-	builder.WriteString(fmt.Sprintf("%v", a.ClearedBalance))
 	builder.WriteByte(')')
 	return builder.String()
 }

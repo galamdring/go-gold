@@ -12,7 +12,7 @@ Content-Type: application/json
 
 ### Create a new budget
 # @name CreateBudget
-POST http://localhost:8080/budgets
+POST http://localhost:8080/users/{{userId}}/budgets
 Content-Type: application/json
 
 {
@@ -25,13 +25,13 @@ Content-Type: application/json
 
 ### Get all budgets
 # @name GetAllBudgetsForUser
-GET http://localhost:8080/budgets?userId={{userId}}
+GET http://localhost:8080/users/{{userId}}/budgets
 
 ### Get a specific budget by ID
-GET http://localhost:8080/budgets/{{budgetId}}
+GET http://localhost:8080/users/{{userId}}/budgets/{{budgetId}}
 
 ### Update a budget
-PUT http://localhost:8080/budgets/{{budgetId}}
+PUT http://localhost:8080/users/{{userId}}/budgets/{{budgetId}}
 Content-Type: application/json
 
 {
@@ -41,4 +41,4 @@ Content-Type: application/json
 }
 
 ### Delete a budget
-DELETE http://localhost:8080/budgets/{{budgetId}}
+DELETE http://localhost:8080/users/{{userId}}/budgets/{{budgetId}}

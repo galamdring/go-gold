@@ -33,18 +33,6 @@ func (ac *AccountCreate) SetType(a account.Type) *AccountCreate {
 	return ac
 }
 
-// SetCurrentBalance sets the "current_balance" field.
-func (ac *AccountCreate) SetCurrentBalance(f float64) *AccountCreate {
-	ac.mutation.SetCurrentBalance(f)
-	return ac
-}
-
-// SetClearedBalance sets the "cleared_balance" field.
-func (ac *AccountCreate) SetClearedBalance(f float64) *AccountCreate {
-	ac.mutation.SetClearedBalance(f)
-	return ac
-}
-
 // SetID sets the "id" field.
 func (ac *AccountCreate) SetID(i int) *AccountCreate {
 	ac.mutation.SetID(i)
@@ -130,12 +118,6 @@ func (ac *AccountCreate) check() error {
 			return &ValidationError{Name: "type", err: fmt.Errorf(`ent: validator failed for field "Account.type": %w`, err)}
 		}
 	}
-	if _, ok := ac.mutation.CurrentBalance(); !ok {
-		return &ValidationError{Name: "current_balance", err: errors.New(`ent: missing required field "Account.current_balance"`)}
-	}
-	if _, ok := ac.mutation.ClearedBalance(); !ok {
-		return &ValidationError{Name: "cleared_balance", err: errors.New(`ent: missing required field "Account.cleared_balance"`)}
-	}
 	return nil
 }
 
@@ -175,14 +157,6 @@ func (ac *AccountCreate) createSpec() (*Account, *sqlgraph.CreateSpec) {
 	if value, ok := ac.mutation.GetType(); ok {
 		_spec.SetField(account.FieldType, field.TypeEnum, value)
 		_node.Type = value
-	}
-	if value, ok := ac.mutation.CurrentBalance(); ok {
-		_spec.SetField(account.FieldCurrentBalance, field.TypeFloat64, value)
-		_node.CurrentBalance = value
-	}
-	if value, ok := ac.mutation.ClearedBalance(); ok {
-		_spec.SetField(account.FieldClearedBalance, field.TypeFloat64, value)
-		_node.ClearedBalance = value
 	}
 	if nodes := ac.mutation.BudgetIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

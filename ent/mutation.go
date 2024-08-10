@@ -43,10 +43,6 @@ type AccountMutation struct {
 	id                  *int
 	name                *string
 	_type               *account.Type
-	current_balance     *float64
-	addcurrent_balance  *float64
-	cleared_balance     *float64
-	addcleared_balance  *float64
 	clearedFields       map[string]struct{}
 	budget              *int
 	clearedbudget       bool
@@ -234,118 +230,6 @@ func (m *AccountMutation) ResetType() {
 	m._type = nil
 }
 
-// SetCurrentBalance sets the "current_balance" field.
-func (m *AccountMutation) SetCurrentBalance(f float64) {
-	m.current_balance = &f
-	m.addcurrent_balance = nil
-}
-
-// CurrentBalance returns the value of the "current_balance" field in the mutation.
-func (m *AccountMutation) CurrentBalance() (r float64, exists bool) {
-	v := m.current_balance
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldCurrentBalance returns the old "current_balance" field's value of the Account entity.
-// If the Account object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AccountMutation) OldCurrentBalance(ctx context.Context) (v float64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldCurrentBalance is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldCurrentBalance requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldCurrentBalance: %w", err)
-	}
-	return oldValue.CurrentBalance, nil
-}
-
-// AddCurrentBalance adds f to the "current_balance" field.
-func (m *AccountMutation) AddCurrentBalance(f float64) {
-	if m.addcurrent_balance != nil {
-		*m.addcurrent_balance += f
-	} else {
-		m.addcurrent_balance = &f
-	}
-}
-
-// AddedCurrentBalance returns the value that was added to the "current_balance" field in this mutation.
-func (m *AccountMutation) AddedCurrentBalance() (r float64, exists bool) {
-	v := m.addcurrent_balance
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetCurrentBalance resets all changes to the "current_balance" field.
-func (m *AccountMutation) ResetCurrentBalance() {
-	m.current_balance = nil
-	m.addcurrent_balance = nil
-}
-
-// SetClearedBalance sets the "cleared_balance" field.
-func (m *AccountMutation) SetClearedBalance(f float64) {
-	m.cleared_balance = &f
-	m.addcleared_balance = nil
-}
-
-// ClearedBalance returns the value of the "cleared_balance" field in the mutation.
-func (m *AccountMutation) ClearedBalance() (r float64, exists bool) {
-	v := m.cleared_balance
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldClearedBalance returns the old "cleared_balance" field's value of the Account entity.
-// If the Account object wasn't provided to the builder, the object is fetched from the database.
-// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *AccountMutation) OldClearedBalance(ctx context.Context) (v float64, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldClearedBalance is only allowed on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldClearedBalance requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldClearedBalance: %w", err)
-	}
-	return oldValue.ClearedBalance, nil
-}
-
-// AddClearedBalance adds f to the "cleared_balance" field.
-func (m *AccountMutation) AddClearedBalance(f float64) {
-	if m.addcleared_balance != nil {
-		*m.addcleared_balance += f
-	} else {
-		m.addcleared_balance = &f
-	}
-}
-
-// AddedClearedBalance returns the value that was added to the "cleared_balance" field in this mutation.
-func (m *AccountMutation) AddedClearedBalance() (r float64, exists bool) {
-	v := m.addcleared_balance
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetClearedBalance resets all changes to the "cleared_balance" field.
-func (m *AccountMutation) ResetClearedBalance() {
-	m.cleared_balance = nil
-	m.addcleared_balance = nil
-}
-
 // SetBudgetID sets the "budget" edge to the Budget entity by id.
 func (m *AccountMutation) SetBudgetID(id int) {
 	m.budget = &id
@@ -473,18 +357,12 @@ func (m *AccountMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *AccountMutation) Fields() []string {
-	fields := make([]string, 0, 4)
+	fields := make([]string, 0, 2)
 	if m.name != nil {
 		fields = append(fields, account.FieldName)
 	}
 	if m._type != nil {
 		fields = append(fields, account.FieldType)
-	}
-	if m.current_balance != nil {
-		fields = append(fields, account.FieldCurrentBalance)
-	}
-	if m.cleared_balance != nil {
-		fields = append(fields, account.FieldClearedBalance)
 	}
 	return fields
 }
@@ -498,10 +376,6 @@ func (m *AccountMutation) Field(name string) (ent.Value, bool) {
 		return m.Name()
 	case account.FieldType:
 		return m.GetType()
-	case account.FieldCurrentBalance:
-		return m.CurrentBalance()
-	case account.FieldClearedBalance:
-		return m.ClearedBalance()
 	}
 	return nil, false
 }
@@ -515,10 +389,6 @@ func (m *AccountMutation) OldField(ctx context.Context, name string) (ent.Value,
 		return m.OldName(ctx)
 	case account.FieldType:
 		return m.OldType(ctx)
-	case account.FieldCurrentBalance:
-		return m.OldCurrentBalance(ctx)
-	case account.FieldClearedBalance:
-		return m.OldClearedBalance(ctx)
 	}
 	return nil, fmt.Errorf("unknown Account field %s", name)
 }
@@ -542,20 +412,6 @@ func (m *AccountMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetType(v)
 		return nil
-	case account.FieldCurrentBalance:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetCurrentBalance(v)
-		return nil
-	case account.FieldClearedBalance:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetClearedBalance(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Account field %s", name)
 }
@@ -563,26 +419,13 @@ func (m *AccountMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *AccountMutation) AddedFields() []string {
-	var fields []string
-	if m.addcurrent_balance != nil {
-		fields = append(fields, account.FieldCurrentBalance)
-	}
-	if m.addcleared_balance != nil {
-		fields = append(fields, account.FieldClearedBalance)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *AccountMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case account.FieldCurrentBalance:
-		return m.AddedCurrentBalance()
-	case account.FieldClearedBalance:
-		return m.AddedClearedBalance()
-	}
 	return nil, false
 }
 
@@ -591,20 +434,6 @@ func (m *AccountMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *AccountMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case account.FieldCurrentBalance:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddCurrentBalance(v)
-		return nil
-	case account.FieldClearedBalance:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddClearedBalance(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Account numeric field %s", name)
 }
@@ -637,12 +466,6 @@ func (m *AccountMutation) ResetField(name string) error {
 		return nil
 	case account.FieldType:
 		m.ResetType()
-		return nil
-	case account.FieldCurrentBalance:
-		m.ResetCurrentBalance()
-		return nil
-	case account.FieldClearedBalance:
-		m.ResetClearedBalance()
 		return nil
 	}
 	return fmt.Errorf("unknown Account field %s", name)
@@ -1709,9 +1532,9 @@ type TransactionMutation struct {
 	op             Op
 	typ            string
 	id             *int
-	amount         *float64
-	addamount      *float64
+	amount         *schema.Decimal
 	note           *string
+	cleared        *bool
 	clearedFields  map[string]struct{}
 	account        *int
 	clearedaccount bool
@@ -1827,13 +1650,12 @@ func (m *TransactionMutation) IDs(ctx context.Context) ([]int, error) {
 }
 
 // SetAmount sets the "amount" field.
-func (m *TransactionMutation) SetAmount(f float64) {
-	m.amount = &f
-	m.addamount = nil
+func (m *TransactionMutation) SetAmount(s schema.Decimal) {
+	m.amount = &s
 }
 
 // Amount returns the value of the "amount" field in the mutation.
-func (m *TransactionMutation) Amount() (r float64, exists bool) {
+func (m *TransactionMutation) Amount() (r schema.Decimal, exists bool) {
 	v := m.amount
 	if v == nil {
 		return
@@ -1844,7 +1666,7 @@ func (m *TransactionMutation) Amount() (r float64, exists bool) {
 // OldAmount returns the old "amount" field's value of the Transaction entity.
 // If the Transaction object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *TransactionMutation) OldAmount(ctx context.Context) (v float64, err error) {
+func (m *TransactionMutation) OldAmount(ctx context.Context) (v schema.Decimal, err error) {
 	if !m.op.Is(OpUpdateOne) {
 		return v, errors.New("OldAmount is only allowed on UpdateOne operations")
 	}
@@ -1858,28 +1680,9 @@ func (m *TransactionMutation) OldAmount(ctx context.Context) (v float64, err err
 	return oldValue.Amount, nil
 }
 
-// AddAmount adds f to the "amount" field.
-func (m *TransactionMutation) AddAmount(f float64) {
-	if m.addamount != nil {
-		*m.addamount += f
-	} else {
-		m.addamount = &f
-	}
-}
-
-// AddedAmount returns the value that was added to the "amount" field in this mutation.
-func (m *TransactionMutation) AddedAmount() (r float64, exists bool) {
-	v := m.addamount
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
 // ResetAmount resets all changes to the "amount" field.
 func (m *TransactionMutation) ResetAmount() {
 	m.amount = nil
-	m.addamount = nil
 }
 
 // SetNote sets the "note" field.
@@ -1916,6 +1719,42 @@ func (m *TransactionMutation) OldNote(ctx context.Context) (v string, err error)
 // ResetNote resets all changes to the "note" field.
 func (m *TransactionMutation) ResetNote() {
 	m.note = nil
+}
+
+// SetCleared sets the "cleared" field.
+func (m *TransactionMutation) SetCleared(b bool) {
+	m.cleared = &b
+}
+
+// Cleared returns the value of the "cleared" field in the mutation.
+func (m *TransactionMutation) Cleared() (r bool, exists bool) {
+	v := m.cleared
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCleared returns the old "cleared" field's value of the Transaction entity.
+// If the Transaction object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *TransactionMutation) OldCleared(ctx context.Context) (v bool, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCleared is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCleared requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCleared: %w", err)
+	}
+	return oldValue.Cleared, nil
+}
+
+// ResetCleared resets all changes to the "cleared" field.
+func (m *TransactionMutation) ResetCleared() {
+	m.cleared = nil
 }
 
 // SetAccountID sets the "account" edge to the Account entity by id.
@@ -2030,12 +1869,15 @@ func (m *TransactionMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *TransactionMutation) Fields() []string {
-	fields := make([]string, 0, 2)
+	fields := make([]string, 0, 3)
 	if m.amount != nil {
 		fields = append(fields, transaction.FieldAmount)
 	}
 	if m.note != nil {
 		fields = append(fields, transaction.FieldNote)
+	}
+	if m.cleared != nil {
+		fields = append(fields, transaction.FieldCleared)
 	}
 	return fields
 }
@@ -2049,6 +1891,8 @@ func (m *TransactionMutation) Field(name string) (ent.Value, bool) {
 		return m.Amount()
 	case transaction.FieldNote:
 		return m.Note()
+	case transaction.FieldCleared:
+		return m.Cleared()
 	}
 	return nil, false
 }
@@ -2062,6 +1906,8 @@ func (m *TransactionMutation) OldField(ctx context.Context, name string) (ent.Va
 		return m.OldAmount(ctx)
 	case transaction.FieldNote:
 		return m.OldNote(ctx)
+	case transaction.FieldCleared:
+		return m.OldCleared(ctx)
 	}
 	return nil, fmt.Errorf("unknown Transaction field %s", name)
 }
@@ -2072,7 +1918,7 @@ func (m *TransactionMutation) OldField(ctx context.Context, name string) (ent.Va
 func (m *TransactionMutation) SetField(name string, value ent.Value) error {
 	switch name {
 	case transaction.FieldAmount:
-		v, ok := value.(float64)
+		v, ok := value.(schema.Decimal)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
@@ -2085,6 +1931,13 @@ func (m *TransactionMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetNote(v)
 		return nil
+	case transaction.FieldCleared:
+		v, ok := value.(bool)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCleared(v)
+		return nil
 	}
 	return fmt.Errorf("unknown Transaction field %s", name)
 }
@@ -2092,21 +1945,13 @@ func (m *TransactionMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented/decremented during
 // this mutation.
 func (m *TransactionMutation) AddedFields() []string {
-	var fields []string
-	if m.addamount != nil {
-		fields = append(fields, transaction.FieldAmount)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was incremented/decremented on a field
 // with the given name. The second boolean return value indicates that this field
 // was not set, or was not defined in the schema.
 func (m *TransactionMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case transaction.FieldAmount:
-		return m.AddedAmount()
-	}
 	return nil, false
 }
 
@@ -2115,13 +1960,6 @@ func (m *TransactionMutation) AddedField(name string) (ent.Value, bool) {
 // type.
 func (m *TransactionMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case transaction.FieldAmount:
-		v, ok := value.(float64)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddAmount(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Transaction numeric field %s", name)
 }
@@ -2154,6 +1992,9 @@ func (m *TransactionMutation) ResetField(name string) error {
 		return nil
 	case transaction.FieldNote:
 		m.ResetNote()
+		return nil
+	case transaction.FieldCleared:
+		m.ResetCleared()
 		return nil
 	}
 	return fmt.Errorf("unknown Transaction field %s", name)

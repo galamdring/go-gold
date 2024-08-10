@@ -11,6 +11,7 @@ import (
 	"entgo.io/ent/schema/field"
 	"github.com/galamdring/go-gold/ent/account"
 	"github.com/galamdring/go-gold/ent/budget"
+	"github.com/galamdring/go-gold/ent/schema"
 	"github.com/galamdring/go-gold/ent/transaction"
 )
 
@@ -22,14 +23,20 @@ type TransactionCreate struct {
 }
 
 // SetAmount sets the "amount" field.
-func (tc *TransactionCreate) SetAmount(f float64) *TransactionCreate {
-	tc.mutation.SetAmount(f)
+func (tc *TransactionCreate) SetAmount(s schema.Decimal) *TransactionCreate {
+	tc.mutation.SetAmount(s)
 	return tc
 }
 
 // SetNote sets the "note" field.
 func (tc *TransactionCreate) SetNote(s string) *TransactionCreate {
 	tc.mutation.SetNote(s)
+	return tc
+}
+
+// SetCleared sets the "cleared" field.
+func (tc *TransactionCreate) SetCleared(b bool) *TransactionCreate {
+	tc.mutation.SetCleared(b)
 	return tc
 }
 
@@ -117,6 +124,9 @@ func (tc *TransactionCreate) check() error {
 	if _, ok := tc.mutation.Note(); !ok {
 		return &ValidationError{Name: "note", err: errors.New(`ent: missing required field "Transaction.note"`)}
 	}
+	if _, ok := tc.mutation.Cleared(); !ok {
+		return &ValidationError{Name: "cleared", err: errors.New(`ent: missing required field "Transaction.cleared"`)}
+	}
 	return nil
 }
 
@@ -150,12 +160,16 @@ func (tc *TransactionCreate) createSpec() (*Transaction, *sqlgraph.CreateSpec) {
 		_spec.ID.Value = id
 	}
 	if value, ok := tc.mutation.Amount(); ok {
-		_spec.SetField(transaction.FieldAmount, field.TypeFloat64, value)
+		_spec.SetField(transaction.FieldAmount, field.TypeOther, value)
 		_node.Amount = value
 	}
 	if value, ok := tc.mutation.Note(); ok {
 		_spec.SetField(transaction.FieldNote, field.TypeString, value)
 		_node.Note = value
+	}
+	if value, ok := tc.mutation.Cleared(); ok {
+		_spec.SetField(transaction.FieldCleared, field.TypeBool, value)
+		_node.Cleared = value
 	}
 	if nodes := tc.mutation.AccountIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{

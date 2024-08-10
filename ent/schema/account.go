@@ -17,8 +17,6 @@ func (Account) Fields() []ent.Field {
 		field.Int("id").Unique(),
 		field.String("name"),
 		field.Enum("type").Values("checking", "savings", "credit_card", "installment_loan"),
-		field.Float("current_balance"),
-		field.Float("cleared_balance"),
 	}
 }
 

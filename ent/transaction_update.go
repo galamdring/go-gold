@@ -13,6 +13,7 @@ import (
 	"github.com/galamdring/go-gold/ent/account"
 	"github.com/galamdring/go-gold/ent/budget"
 	"github.com/galamdring/go-gold/ent/predicate"
+	"github.com/galamdring/go-gold/ent/schema"
 	"github.com/galamdring/go-gold/ent/transaction"
 )
 
@@ -30,23 +31,16 @@ func (tu *TransactionUpdate) Where(ps ...predicate.Transaction) *TransactionUpda
 }
 
 // SetAmount sets the "amount" field.
-func (tu *TransactionUpdate) SetAmount(f float64) *TransactionUpdate {
-	tu.mutation.ResetAmount()
-	tu.mutation.SetAmount(f)
+func (tu *TransactionUpdate) SetAmount(s schema.Decimal) *TransactionUpdate {
+	tu.mutation.SetAmount(s)
 	return tu
 }
 
 // SetNillableAmount sets the "amount" field if the given value is not nil.
-func (tu *TransactionUpdate) SetNillableAmount(f *float64) *TransactionUpdate {
-	if f != nil {
-		tu.SetAmount(*f)
+func (tu *TransactionUpdate) SetNillableAmount(s *schema.Decimal) *TransactionUpdate {
+	if s != nil {
+		tu.SetAmount(*s)
 	}
-	return tu
-}
-
-// AddAmount adds f to the "amount" field.
-func (tu *TransactionUpdate) AddAmount(f float64) *TransactionUpdate {
-	tu.mutation.AddAmount(f)
 	return tu
 }
 
@@ -60,6 +54,20 @@ func (tu *TransactionUpdate) SetNote(s string) *TransactionUpdate {
 func (tu *TransactionUpdate) SetNillableNote(s *string) *TransactionUpdate {
 	if s != nil {
 		tu.SetNote(*s)
+	}
+	return tu
+}
+
+// SetCleared sets the "cleared" field.
+func (tu *TransactionUpdate) SetCleared(b bool) *TransactionUpdate {
+	tu.mutation.SetCleared(b)
+	return tu
+}
+
+// SetNillableCleared sets the "cleared" field if the given value is not nil.
+func (tu *TransactionUpdate) SetNillableCleared(b *bool) *TransactionUpdate {
+	if b != nil {
+		tu.SetCleared(*b)
 	}
 	return tu
 }
@@ -156,13 +164,13 @@ func (tu *TransactionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 		}
 	}
 	if value, ok := tu.mutation.Amount(); ok {
-		_spec.SetField(transaction.FieldAmount, field.TypeFloat64, value)
-	}
-	if value, ok := tu.mutation.AddedAmount(); ok {
-		_spec.AddField(transaction.FieldAmount, field.TypeFloat64, value)
+		_spec.SetField(transaction.FieldAmount, field.TypeOther, value)
 	}
 	if value, ok := tu.mutation.Note(); ok {
 		_spec.SetField(transaction.FieldNote, field.TypeString, value)
+	}
+	if value, ok := tu.mutation.Cleared(); ok {
+		_spec.SetField(transaction.FieldCleared, field.TypeBool, value)
 	}
 	if tu.mutation.AccountCleared() {
 		edge := &sqlgraph.EdgeSpec{
@@ -243,23 +251,16 @@ type TransactionUpdateOne struct {
 }
 
 // SetAmount sets the "amount" field.
-func (tuo *TransactionUpdateOne) SetAmount(f float64) *TransactionUpdateOne {
-	tuo.mutation.ResetAmount()
-	tuo.mutation.SetAmount(f)
+func (tuo *TransactionUpdateOne) SetAmount(s schema.Decimal) *TransactionUpdateOne {
+	tuo.mutation.SetAmount(s)
 	return tuo
 }
 
 // SetNillableAmount sets the "amount" field if the given value is not nil.
-func (tuo *TransactionUpdateOne) SetNillableAmount(f *float64) *TransactionUpdateOne {
-	if f != nil {
-		tuo.SetAmount(*f)
+func (tuo *TransactionUpdateOne) SetNillableAmount(s *schema.Decimal) *TransactionUpdateOne {
+	if s != nil {
+		tuo.SetAmount(*s)
 	}
-	return tuo
-}
-
-// AddAmount adds f to the "amount" field.
-func (tuo *TransactionUpdateOne) AddAmount(f float64) *TransactionUpdateOne {
-	tuo.mutation.AddAmount(f)
 	return tuo
 }
 
@@ -273,6 +274,20 @@ func (tuo *TransactionUpdateOne) SetNote(s string) *TransactionUpdateOne {
 func (tuo *TransactionUpdateOne) SetNillableNote(s *string) *TransactionUpdateOne {
 	if s != nil {
 		tuo.SetNote(*s)
+	}
+	return tuo
+}
+
+// SetCleared sets the "cleared" field.
+func (tuo *TransactionUpdateOne) SetCleared(b bool) *TransactionUpdateOne {
+	tuo.mutation.SetCleared(b)
+	return tuo
+}
+
+// SetNillableCleared sets the "cleared" field if the given value is not nil.
+func (tuo *TransactionUpdateOne) SetNillableCleared(b *bool) *TransactionUpdateOne {
+	if b != nil {
+		tuo.SetCleared(*b)
 	}
 	return tuo
 }
@@ -399,13 +414,13 @@ func (tuo *TransactionUpdateOne) sqlSave(ctx context.Context) (_node *Transactio
 		}
 	}
 	if value, ok := tuo.mutation.Amount(); ok {
-		_spec.SetField(transaction.FieldAmount, field.TypeFloat64, value)
-	}
-	if value, ok := tuo.mutation.AddedAmount(); ok {
-		_spec.AddField(transaction.FieldAmount, field.TypeFloat64, value)
+		_spec.SetField(transaction.FieldAmount, field.TypeOther, value)
 	}
 	if value, ok := tuo.mutation.Note(); ok {
 		_spec.SetField(transaction.FieldNote, field.TypeString, value)
+	}
+	if value, ok := tuo.mutation.Cleared(); ok {
+		_spec.SetField(transaction.FieldCleared, field.TypeBool, value)
 	}
 	if tuo.mutation.AccountCleared() {
 		edge := &sqlgraph.EdgeSpec{

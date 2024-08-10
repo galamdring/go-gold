@@ -18,10 +18,6 @@ const (
 	FieldName = "name"
 	// FieldType holds the string denoting the type field in the database.
 	FieldType = "type"
-	// FieldCurrentBalance holds the string denoting the current_balance field in the database.
-	FieldCurrentBalance = "current_balance"
-	// FieldClearedBalance holds the string denoting the cleared_balance field in the database.
-	FieldClearedBalance = "cleared_balance"
 	// EdgeBudget holds the string denoting the budget edge name in mutations.
 	EdgeBudget = "budget"
 	// EdgeTransactions holds the string denoting the transactions edge name in mutations.
@@ -49,8 +45,6 @@ var Columns = []string{
 	FieldID,
 	FieldName,
 	FieldType,
-	FieldCurrentBalance,
-	FieldClearedBalance,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the "accounts"
@@ -115,16 +109,6 @@ func ByName(opts ...sql.OrderTermOption) OrderOption {
 // ByType orders the results by the type field.
 func ByType(opts ...sql.OrderTermOption) OrderOption {
 	return sql.OrderByField(FieldType, opts...).ToFunc()
-}
-
-// ByCurrentBalance orders the results by the current_balance field.
-func ByCurrentBalance(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldCurrentBalance, opts...).ToFunc()
-}
-
-// ByClearedBalance orders the results by the cleared_balance field.
-func ByClearedBalance(opts ...sql.OrderTermOption) OrderOption {
-	return sql.OrderByField(FieldClearedBalance, opts...).ToFunc()
 }
 
 // ByBudgetField orders the results by budget field.

@@ -335,7 +335,7 @@ func (tq *TransactionQuery) WithBudget(opts ...func(*BudgetQuery)) *TransactionQ
 // Example:
 //
 //	var v []struct {
-//		Amount float64 `json:"amount,omitempty"`
+//		Amount schema.Decimal `json:"amount,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
@@ -358,7 +358,7 @@ func (tq *TransactionQuery) GroupBy(field string, fields ...string) *Transaction
 // Example:
 //
 //	var v []struct {
-//		Amount float64 `json:"amount,omitempty"`
+//		Amount schema.Decimal `json:"amount,omitempty"`
 //	}
 //
 //	client.Transaction.Query().

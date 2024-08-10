@@ -58,16 +58,6 @@ func Name(v string) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldName, v))
 }
 
-// CurrentBalance applies equality check predicate on the "current_balance" field. It's identical to CurrentBalanceEQ.
-func CurrentBalance(v float64) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldCurrentBalance, v))
-}
-
-// ClearedBalance applies equality check predicate on the "cleared_balance" field. It's identical to ClearedBalanceEQ.
-func ClearedBalance(v float64) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldClearedBalance, v))
-}
-
 // NameEQ applies the EQ predicate on the "name" field.
 func NameEQ(v string) predicate.Account {
 	return predicate.Account(sql.FieldEQ(FieldName, v))
@@ -151,86 +141,6 @@ func TypeIn(vs ...Type) predicate.Account {
 // TypeNotIn applies the NotIn predicate on the "type" field.
 func TypeNotIn(vs ...Type) predicate.Account {
 	return predicate.Account(sql.FieldNotIn(FieldType, vs...))
-}
-
-// CurrentBalanceEQ applies the EQ predicate on the "current_balance" field.
-func CurrentBalanceEQ(v float64) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldCurrentBalance, v))
-}
-
-// CurrentBalanceNEQ applies the NEQ predicate on the "current_balance" field.
-func CurrentBalanceNEQ(v float64) predicate.Account {
-	return predicate.Account(sql.FieldNEQ(FieldCurrentBalance, v))
-}
-
-// CurrentBalanceIn applies the In predicate on the "current_balance" field.
-func CurrentBalanceIn(vs ...float64) predicate.Account {
-	return predicate.Account(sql.FieldIn(FieldCurrentBalance, vs...))
-}
-
-// CurrentBalanceNotIn applies the NotIn predicate on the "current_balance" field.
-func CurrentBalanceNotIn(vs ...float64) predicate.Account {
-	return predicate.Account(sql.FieldNotIn(FieldCurrentBalance, vs...))
-}
-
-// CurrentBalanceGT applies the GT predicate on the "current_balance" field.
-func CurrentBalanceGT(v float64) predicate.Account {
-	return predicate.Account(sql.FieldGT(FieldCurrentBalance, v))
-}
-
-// CurrentBalanceGTE applies the GTE predicate on the "current_balance" field.
-func CurrentBalanceGTE(v float64) predicate.Account {
-	return predicate.Account(sql.FieldGTE(FieldCurrentBalance, v))
-}
-
-// CurrentBalanceLT applies the LT predicate on the "current_balance" field.
-func CurrentBalanceLT(v float64) predicate.Account {
-	return predicate.Account(sql.FieldLT(FieldCurrentBalance, v))
-}
-
-// CurrentBalanceLTE applies the LTE predicate on the "current_balance" field.
-func CurrentBalanceLTE(v float64) predicate.Account {
-	return predicate.Account(sql.FieldLTE(FieldCurrentBalance, v))
-}
-
-// ClearedBalanceEQ applies the EQ predicate on the "cleared_balance" field.
-func ClearedBalanceEQ(v float64) predicate.Account {
-	return predicate.Account(sql.FieldEQ(FieldClearedBalance, v))
-}
-
-// ClearedBalanceNEQ applies the NEQ predicate on the "cleared_balance" field.
-func ClearedBalanceNEQ(v float64) predicate.Account {
-	return predicate.Account(sql.FieldNEQ(FieldClearedBalance, v))
-}
-
-// ClearedBalanceIn applies the In predicate on the "cleared_balance" field.
-func ClearedBalanceIn(vs ...float64) predicate.Account {
-	return predicate.Account(sql.FieldIn(FieldClearedBalance, vs...))
-}
-
-// ClearedBalanceNotIn applies the NotIn predicate on the "cleared_balance" field.
-func ClearedBalanceNotIn(vs ...float64) predicate.Account {
-	return predicate.Account(sql.FieldNotIn(FieldClearedBalance, vs...))
-}
-
-// ClearedBalanceGT applies the GT predicate on the "cleared_balance" field.
-func ClearedBalanceGT(v float64) predicate.Account {
-	return predicate.Account(sql.FieldGT(FieldClearedBalance, v))
-}
-
-// ClearedBalanceGTE applies the GTE predicate on the "cleared_balance" field.
-func ClearedBalanceGTE(v float64) predicate.Account {
-	return predicate.Account(sql.FieldGTE(FieldClearedBalance, v))
-}
-
-// ClearedBalanceLT applies the LT predicate on the "cleared_balance" field.
-func ClearedBalanceLT(v float64) predicate.Account {
-	return predicate.Account(sql.FieldLT(FieldClearedBalance, v))
-}
-
-// ClearedBalanceLTE applies the LTE predicate on the "cleared_balance" field.
-func ClearedBalanceLTE(v float64) predicate.Account {
-	return predicate.Account(sql.FieldLTE(FieldClearedBalance, v))
 }
 
 // HasBudget applies the HasEdge predicate on the "budget" edge.
