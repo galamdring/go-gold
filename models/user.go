@@ -45,7 +45,10 @@ type UserModel struct {
 
 // NewUserModel creates a new UserModel.
 func NewUserModel(client *ent.Client) *UserModel {
-	return &UserModel{client: client}
+	return &UserModel{
+		BaseModel: BaseModel{},
+		client: client,
+	}
 }
 
 // CreateUser creates a new user.

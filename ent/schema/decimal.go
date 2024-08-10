@@ -17,7 +17,7 @@ func (d *Decimal) Scan(value interface{}) error {
 	}
 	decimalValue, err := decimal.NewFromString(fmt.Sprintf("%v", value))
 	if err != nil {
-		return err
+		return fmt.Errorf("failed to parse decimal from %s, %w", value, err)
 	}
 	*d = Decimal(decimalValue)
 	return nil

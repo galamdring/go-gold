@@ -80,7 +80,8 @@ func GetClearedBalance(trans []*ent.Transaction) *decimal.Decimal {
 	return &balance
 }
 
-func BuildAccountRestModels(accs []*ent.Account) (result []*AccountRestModel) {
+func BuildAccountRestModels(accs []*ent.Account) []*AccountRestModel {
+	var result []*AccountRestModel
 	for _, acc := range accs {
 		result = append(result, BuildAccountRestModel(acc))
 	}

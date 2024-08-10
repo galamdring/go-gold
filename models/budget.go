@@ -53,14 +53,17 @@ type BudgetModel struct {
 
 // NewBudgetModel creates a new BudgetModel.
 func NewBudgetModel(client *ent.Client) *BudgetModel {
-	return &BudgetModel{client: client}
+	return &BudgetModel{
+		BaseModel: BaseModel{},
+		client: client,
+	}
 }
 
 // CreateBudget creates a new budget.
 func (m *BudgetModel) CreateBudget(eContext echo.Context) error {
-	b := &BudgetRestModel{}
-	if err := eContext.Bind(b); err != nil {
-		return eContext.JSON(http.StatusBadRequest, err.Error())
+	var b BudgetRestModel
+	if err := eContext.Bind(&b); err != nil {
+		return m.sendJSON(eContext, http.StatusBadRequest, err.Error())
 	}
 
 	bud, err := m.client.Budget.Create().
@@ -69,16 +72,16 @@ func (m *BudgetModel) CreateBudget(eContext echo.Context) error {
 		SetAmount(schema.Decimal(b.Amount)).
 		Save(eContext.Request().Context())
 	if err != nil {
-		return eContext.JSON(http.StatusInternalServerError, err.Error())
+		return m.sendJSON(eContext, http.StatusInternalServerError, err.Error())
 	}
 
 	// Create doesn't actually load the edges, so Load it manually to include it in the response
 	bud.Edges.User, err = bud.QueryUser().Only(eContext.Request().Context())
 	if err != nil {
-		return eContext.JSON(http.StatusInternalServerError, err.Error())
+		return m.sendJSON(eContext, http.StatusInternalServerError, err.Error())
 	}
 
-	return eContext.JSON(http.StatusCreated, BuildBudgetRestModel(bud))
+	return m.sendJSON(eContext, http.StatusCreated, BuildBudgetRestModel(bud))
 }
 
 // GetAllBudgets retrieves all budgets.
@@ -124,8 +127,8 @@ func (m *BudgetModel) GetBudget(eContext echo.Context) error {
 // UpdateBudget updates an existing budget.
 func (m *BudgetModel) UpdateBudget(eContext echo.Context) error {
 	id := eContext.Param("id")
-	b := &BudgetRestModel{}
-	if err := eContext.Bind(b); err != nil {
+	var b BudgetRestModel
+	if err := eContext.Bind(&b); err != nil {
 		return m.sendJSON(eContext, http.StatusBadRequest, err.Error())
 	}
 
